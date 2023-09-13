@@ -1,4 +1,4 @@
-import {Clipboard} from "@napi-rs/clipboard";
+import clipboard from "clipboardy";
 import {delay} from "./helpers.js";
 import * as fs from "fs";
 import path from "path";
@@ -8,43 +8,33 @@ interface ClipboardSnifferParams {
     duration?: number;
 }
 
-const clipboard = new Clipboard();
 
 async function executeSniffer(abortController: AbortController, saveDir: string) {
     await fs.promises.mkdir(saveDir, {
         recursive: true,
-    })
+    });
     while (!abortController.signal.aborted) {
-        let buffer: Buffer|string|undefined = undefined;
-        let methods = [() => clipboard.getText(), () => clipboard.getImage()];
-        for (let method of methods) {
-            try {
-                buffer = method();
-            } catch (e) {
-            }
+        try {
+            const data = await clipboard.read();
+            const filename = path.join(saveDir, `${new Date().toUTCString().replace(/\W/g, "_")}.txt`);
+            await fs.promises.writeFile(filename, data);
+        } catch (e) {
+            console.error(e);
         }
-        const newDate = new Date().getTime();
-        if (typeof buffer === "string") {
-            await fs.promises.writeFile(path.join(saveDir, `${newDate}.txt`), buffer);
-        } else if (buffer instanceof Buffer) {
-            console.log("Save as image");
-            await fs.promises.writeFile(path.join(saveDir, `${newDate}.jpg`), buffer);
-        }
-        await delay(10);
+        await delay(1);
     }
-    console.log("Aborted")
 }
 
-
 export default function sniffClipboard(parameters: ClipboardSnifferParams): AbortController {
-    const duration = (parameters.duration ?? Infinity) < (2 ** 32 * - 1) ? parameters.duration : Infinity;
+    const unboundedDuration = parameters.duration ?? Infinity;
+    const duration = unboundedDuration < (2 ** 32 - 1) ? unboundedDuration : Infinity;
     const abortController = new AbortController();
 
     executeSniffer(abortController, path.join(parameters.outDir, "clipboard")).then();
     if (duration !== Infinity) {
         setTimeout(() => {
             abortController.abort();
-        }, duration);
+        }, duration * 1000);
     }
     return abortController;
 }
