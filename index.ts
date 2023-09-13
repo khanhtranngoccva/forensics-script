@@ -1,45 +1,77 @@
 import sniffClipboard from "./clipboard.js";
 import path from "path";
-import {OUT_DIR} from "./root.js";
 import 'dotenv/config.js';
 import {getIpConfig, getPromiscuousAdapters, memoryDump, PsUtils} from "./volatile.js";
 import {extractDirectory, scanEntireDirectory} from "./nonvolatile.js";
-import PromisePool from "./pool.js";
-import * as fs from "fs";
-import {isWithin} from "./helpers.js";
+import * as argparse from 'argparse';
+
+const parser = new argparse.ArgumentParser();
+
+parser.add_argument('--targets', {
+    help: "Target directories. File scanner will work in these directories.",
+    nargs: "*",
+    default: ["C:\\"],
+});
+parser.add_argument('--extensions', {
+    help: "List of extensions to filter",
+    nargs: "*",
+    default: [".png", ".jpg", ".jpeg"],
+});
+parser.add_argument('--save-location', {
+    help: "The location to save logs of installed tools and extracted files.",
+    default: path.join(process.cwd(), "output"),
+});
+parser.add_argument('--ram-dump', {
+    help: "Enable dumping RAM onto disk.",
+    default: "on",
+});
+const _args = parser.parse_args();
+const args = {
+    targets: _args.targets as string[],
+    extensions: _args.extensions as string[],
+    save_location: _args.save_location as string,
+    ram_dump: _args.ram_dump === "on",
+}
+
+console.log(args)
 
 async function main() {
     // First step - enable clipboard sniffing.
     const clipboardHandle = sniffClipboard({
-        outDir: path.join(OUT_DIR),
+        outDir: path.join(args.save_location),
         duration: Infinity,
     });
     // Second step - get running processes and multiple other volatile data from memory like current users, network connections, and so on.
     const psutils = new PsUtils();
     const volatileFetchSteps = [
         psutils.getProcessList({
-            outDir: OUT_DIR,
+            outDir: args.save_location,
         }),
         psutils.getLoggedOnUsers({
-            outDir: OUT_DIR,
+            outDir: args.save_location,
         }),
         psutils.getServices({
-            outDir: OUT_DIR,
+            outDir: args.save_location,
         }),
         getIpConfig({
-            outDir: OUT_DIR,
+            outDir: args.save_location,
         }),
         getPromiscuousAdapters({
-            outDir: OUT_DIR,
+            outDir: args.save_location,
         }),
     ];
     await Promise.all(volatileFetchSteps);
     // Step 3: Complete memory dump. Takes quite some time.
-    await memoryDump({
-        outDir: OUT_DIR
-    });
+    if (args.ram_dump) {
+        await memoryDump({
+            outDir: args.save_location
+        });
+    }
     // Step 4: Perform a disk copy of all files like documents or images.
-    await extractDirectory("C:\\", path.join(OUT_DIR, "extracted_files"));
+    for (let target of args.targets) {
+        console.log(target);
+        await extractDirectory(target, args.save_location, args.extensions);
+    }
     // Step 5: Cleanup.
     clipboardHandle.abort("End script - stopping clipboard sniffer.");
 }

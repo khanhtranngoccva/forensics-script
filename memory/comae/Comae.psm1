@@ -42,7 +42,7 @@ Function Get-ComaeToolkitPath(
     Create a full memory Microsoft crash dump.
 
 .DESCRIPTION
-    This script creates a memory image into the target directory using DumpIt. 
+    This script creates a memory image into the targets directory using DumpIt.
 
 .PARAMETER Directory
     Destination folder for the output file.
@@ -55,7 +55,7 @@ Function Get-ComaeToolkitPath(
     C (https://github.com/comaeio/z2dmp/)
 
 .EXAMPLE
-    Creates a compressed memory image into the given target folder.
+    Creates a compressed memory image into the given targets folder.
     PS C:\> New-ComaeDumpFile -Directory C:\Dumps -IsCompress
 #>
 Function New-ComaeDumpFile(

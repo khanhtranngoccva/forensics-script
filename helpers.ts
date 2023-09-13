@@ -2,7 +2,6 @@ import * as child_process from "child_process";
 import * as fs from "fs";
 import path from "path";
 import {fileURLToPath} from "url";
-import EventEmitter from "events";
 
 export async function delay(seconds: number) {
     return new Promise<void>(resolve => {

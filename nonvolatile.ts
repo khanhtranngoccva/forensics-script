@@ -33,26 +33,26 @@ export function scanEntireDirectory(directory: string = "C:\\", extensions: stri
     return scanDirectory(directory);
 }
 
-export async function extractDirectory(directory: string, saveDir: string) {
+export async function extractDirectory(directory: string, saveDir: string, extensions: string[]) {
     const pool = new PromisePool(100);
     const startTime = performance.now();
     let filesCopied = 0;
-    for await (let file of scanEntireDirectory(directory, [".png", ".jpg", ".jpeg"])) {
+    for await (let file of scanEntireDirectory(directory, extensions)) {
         // Never copy or duplicate itself.
         if (isWithin(OUT_DIR, file)) {
             console.warn(`Skipping file ${file} as it overlaps with ${OUT_DIR}. 
 Avoid setting output directory file inside the directory to be scanned.`);
             continue;
         }
-        const destPath = path.join(saveDir, path.relative(directory, file));
+        const destPath = path.join(saveDir, "extracted_files", file.replaceAll(":", ""));
         const task = async () => {
             await fs.promises.cp(file, destPath, {
                 recursive: true,
             });
             filesCopied++;
             const endTime = performance.now();
-            console.log(`Files copied: ${filesCopied}, Copy speed: ${filesCopied / ((endTime - startTime) / 1000)} files/second`)
-        }
+            console.log(`Files copied: ${filesCopied}, Copy speed: ${filesCopied / ((endTime - startTime) / 1000)} files/second`);
+        };
         await pool.execute(task);
     }
 }

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/argparse": "^2.0.10",
     "@types/copy-paste": "^1.1.31",
     "@types/node": "^20.6.0",
     "ts-node": "^10.9.1",
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "@napi-rs/clipboard": "^1.1.1",
+    "argparse": "^2.0.1",
     "clipboardy": "^3.0.0",
     "copy-paste": "^1.5.3",
     "dotenv": "^16.3.1"

@@ -47,5 +47,5 @@ export async function getPromiscuousAdapters(params: {outDir: string}) {
 }
 
 export async function memoryDump(params: {outDir: string}) {
-    await execute(getPathFromScriptRoot("memory/comae/x64/dumpit"), ["/r", "/o", path.join(params.outDir, "memory_dump.zdmp")], {});
+    await execute(getPathFromScriptRoot("memory/comae/x64/dumpit"), ["/r", "/q", "/o", path.join(params.outDir, "memory_dump.zdmp")], {});
 }
