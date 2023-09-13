@@ -1,0 +1,24 @@
+{
+  "name": "forensics-script",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/copy-paste": "^1.1.31",
+    "@types/node": "^20.6.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@napi-rs/clipboard": "^1.1.1",
+    "clipboardy": "^3.0.0",
+    "copy-paste": "^1.5.3",
+    "dotenv": "^16.3.1"
+  }
+}
