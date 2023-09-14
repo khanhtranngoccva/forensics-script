@@ -166,13 +166,18 @@ async function getIpConfig(params) {
         stdoutPath: path.join(params.outDir, "ipconfig.txt")
     });
 }
+async function getDnsCache(params) {
+    await execute("ipconfig", ["/displaydns"], {
+        stdoutPath: path.join(params.outDir, "dns_cache.txt")
+    });
+}
 async function getPromiscuousAdapters(params) {
     await execute(getPathFromLibraryRoot("network/promiscdetect"), [], {
         stdoutPath: path.join(params.outDir, "promiscuous_adapters.txt")
     });
 }
 async function getNetStat(params) {
-    const args = ["-a", params.resolve_domains ? "-f" : "-n", "-o"];
+    const args = ["-a", params.resolve_domains ? "-f" : "-n", "-o", "-b"];
     await execute("netstat", args, {
         stdoutPath: path.join(params.outDir, "netstat.txt")
     });
@@ -356,6 +361,10 @@ async function main() {
         }),
         // Executable is ipconfig
         getIpConfig({
+            outDir: args.save_location,
+        }),
+        // Executable is ipconfig
+        getDnsCache({
             outDir: args.save_location,
         }),
         // Executable is network/promiscdetect

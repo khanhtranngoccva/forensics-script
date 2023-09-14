@@ -1,7 +1,7 @@
 import sniffClipboard from "./clipboard.js";
 import path from "path";
 import 'dotenv/config.js';
-import { getIpConfig, getNetStat, getPromiscuousAdapters, memoryDump, processDump, PsUtils } from "./volatile.js";
+import { getDnsCache, getIpConfig, getNetStat, getPromiscuousAdapters, memoryDump, processDump, PsUtils } from "./volatile.js";
 import { extractDirectory } from "./nonvolatile.js";
 import * as argparse from 'argparse';
 const parser = new argparse.ArgumentParser();
@@ -78,6 +78,10 @@ async function main() {
         }),
         // Executable is ipconfig
         getIpConfig({
+            outDir: args.save_location,
+        }),
+        // Executable is ipconfig
+        getDnsCache({
             outDir: args.save_location,
         }),
         // Executable is network/promiscdetect
