@@ -2,10 +2,12 @@
   "name": "forensics-script",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "ts-node index.ts"
+    "dev": "ts-node index.ts",
+    "build": "tsc && rollup ./build/index.js --file ./_bundle.js --format cjs && pkg --debug -c package.json ./_bundle.js -o production.exe",
+    "start": "cross-env DEBUG_PKG=1 production.exe"
   },
   "author": "",
   "license": "ISC",
@@ -13,14 +15,25 @@
     "@types/argparse": "^2.0.10",
     "@types/copy-paste": "^1.1.31",
     "@types/node": "^20.6.0",
+    "pkg": "^5.8.1",
+    "rollup": "^3.29.1",
+    "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@napi-rs/clipboard": "^1.1.1",
     "argparse": "^2.0.1",
     "clipboardy": "^3.0.0",
     "copy-paste": "^1.5.3",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.3.1"
+  },
+  "pkg": {
+    "assets": "lib/**/*",
+    "targets": [
+      "latest-win-x64"
+    ]
   }
 }

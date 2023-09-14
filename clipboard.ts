@@ -1,4 +1,3 @@
-import clipboard from "clipboardy";
 import {delay} from "./helpers.js";
 import * as fs from "fs";
 import path from "path";
@@ -15,7 +14,7 @@ async function executeSniffer(abortController: AbortController, saveDir: string)
     });
     while (!abortController.signal.aborted) {
         try {
-            const data = await clipboard.read();
+            const data = await (await import("clipboardy")).default.read();
             const filename = path.join(saveDir, `${new Date().toUTCString().replace(/\W/g, "_")}.txt`);
             await fs.promises.writeFile(filename, data);
         } catch (e) {

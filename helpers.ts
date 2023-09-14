@@ -46,8 +46,8 @@ export async function execute(command: string, args: string[], options: {
     });
 }
 
-export function getPathFromScriptRoot(relPath: string) {
-    return path.join(path.dirname(fileURLToPath(import.meta.url)), relPath);
+export function getPathFromLibraryRoot(relPath: string) {
+    return path.join(__dirname, "lib", relPath);
 }
 
 
