@@ -22,7 +22,7 @@ async function executeSniffer(abortController: AbortController, saveDir: string)
         } catch (e) {
             console.error(e);
         }
-        await delay(1);
+        await delay(10);
     }
 }
 
