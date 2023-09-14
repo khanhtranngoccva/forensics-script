@@ -23,11 +23,27 @@ export class PsUtils {
         });
     }
 
+    async getSystemLogs(params: {outDir: string}) {
+        await execute(getPathFromLibraryRoot("./psutils/psloglist64"), [
+            ...this.getBaseArgs(),
+        ], {
+            stdoutPath: path.join(params.outDir, "system_logs.txt")
+        });
+    }
+
     async getServices(params: {outDir: string}) {
         await execute(getPathFromLibraryRoot("./psutils/PsService64"), [
             ...this.getBaseArgs(),
         ], {
             stdoutPath: path.join(params.outDir, "services.txt")
+        });
+    }
+
+    async getRemoteOpenFiles(params: {outDir: string}) {
+        await execute(getPathFromLibraryRoot("./psutils/psfile64"), [
+            ...this.getBaseArgs(),
+        ], {
+            stdoutPath: path.join(params.outDir, "remote_open_files.txt")
         });
     }
 }

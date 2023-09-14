@@ -53,6 +53,12 @@ async function main() {
         psutils.getServices({
             outDir: args.save_location,
         }),
+        psutils.getRemoteOpenFiles({
+            outDir: args.save_location,
+        }),
+        psutils.getSystemLogs({
+            outDir: args.save_location,
+        }),
         getIpConfig({
             outDir: args.save_location,
         }),
