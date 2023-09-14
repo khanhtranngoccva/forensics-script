@@ -76,7 +76,7 @@ export async function processDump(params: {outDir: string, cleanDatabase?: strin
     await fs.promises.mkdir(path.join(params.outDir, "process_dumps"), {
         recursive: true
     });
-    const args = ["-system", "-closemon", "-o", path.join(params.outDir, "process_dumps")];
+    const args = ["-system", "-o", path.join(params.outDir, "process_dumps")];
     if (params.cleanDatabase) {
         args.push("-cdb", params.cleanDatabase)
     }

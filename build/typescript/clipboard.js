@@ -16,7 +16,7 @@ async function executeSniffer(abortController, saveDir) {
         catch (e) {
             console.error(e);
         }
-        await delay(1);
+        await delay(10);
     }
 }
 export default function sniffClipboard(parameters) {

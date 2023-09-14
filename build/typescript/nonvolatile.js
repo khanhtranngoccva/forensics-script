@@ -37,8 +37,7 @@ export async function extractDirectory(directory, saveDir, extensions) {
     const startTime = performance.now();
     let filesCopied = 0;
     for await (let file of scanEntireDirectory(directory, extensions)) {
-        // Never copy or duplicate itself.
-        if (isWithin(OUT_DIR, file)) {
+        if (isWithin(saveDir, file)) {
             console.warn(`Skipping file ${file} as it overlaps with ${OUT_DIR}. 
 Avoid setting output directory file inside the directory to be scanned.`);
             continue;

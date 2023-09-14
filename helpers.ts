@@ -27,7 +27,7 @@ export async function execute(command: string, args: string[], options: {
     cwd?: string,
     stdoutPath?: string
 }) {
-    console.log(`[${path.parse(command).base}]: Starting process`)
+    console.log(`[${path.parse(command).base}]: Starting process with args ${args.join(" ")}`)
     if (options.stdoutPath) {
         await fs.promises.mkdir(path.parse(options.stdoutPath).dir, {
             recursive: true
