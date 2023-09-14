@@ -1,5 +1,6 @@
 import {execute, getPathFromLibraryRoot} from "./helpers.js";
 import path from "path";
+import * as fs from "fs";
 
 
 export class PsUtils {
@@ -60,12 +61,24 @@ export async function getPromiscuousAdapters(params: {outDir: string}) {
     });
 }
 
-export async function getNetStat(params: {outDir: string}) {
-    await execute("netstat", ["-a", "-f", "-o"], {
+export async function getNetStat(params: {outDir: string, resolve_domains: boolean}) {
+    const args = ["-a", params.resolve_domains ? "-f" : "-n", "-o"]
+    await execute("netstat", args, {
         stdoutPath: path.join(params.outDir, "netstat.txt")
     });
 }
 
 export async function memoryDump(params: {outDir: string}) {
     await execute(getPathFromLibraryRoot("memory/comae/x64/dumpit"), ["/r", "/q", "/o", path.join(params.outDir, "memory_dump.zdmp")], {});
+}
+
+export async function processDump(params: {outDir: string, cleanDatabase?: string}) {
+    await fs.promises.mkdir(path.join(params.outDir, "process_dumps"), {
+        recursive: true
+    });
+    const args = ["-system", "-closemon", "-o", path.join(params.outDir, "process_dumps")];
+    if (params.cleanDatabase) {
+        args.push("-cdb", params.cleanDatabase)
+    }
+    await execute(getPathFromLibraryRoot("memory/processdump/pd64"), args, {});
 }
