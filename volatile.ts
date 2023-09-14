@@ -55,6 +55,12 @@ export async function getIpConfig(params: {outDir: string}) {
     });
 }
 
+export async function getDnsCache(params: {outDir: string}) {
+    await execute("ipconfig", ["/displaydns"], {
+        stdoutPath: path.join(params.outDir, "dns_cache.txt")
+    });
+}
+
 export async function getPromiscuousAdapters(params: {outDir: string}) {
     await execute(getPathFromLibraryRoot("network/promiscdetect"), [], {
         stdoutPath: path.join(params.outDir, "promiscuous_adapters.txt")
