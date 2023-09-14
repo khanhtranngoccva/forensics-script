@@ -62,7 +62,7 @@ export async function getPromiscuousAdapters(params: {outDir: string}) {
 }
 
 export async function getNetStat(params: {outDir: string, resolve_domains: boolean}) {
-    const args = ["-a", params.resolve_domains ? "-f" : "-n", "-o"]
+    const args = ["-a", params.resolve_domains ? "-f" : "-n", "-o", "-b"]
     await execute("netstat", args, {
         stdoutPath: path.join(params.outDir, "netstat.txt")
     });
