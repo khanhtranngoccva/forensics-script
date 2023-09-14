@@ -3,6 +3,20 @@ import * as fs from "fs";
 import path from "path";
 import {fileURLToPath} from "url";
 
+let EXECUTABLE_DIRECTORY: string;
+// Detect if in pkg executable
+// @ts-ignore
+if (process.pkg?.entrypoint) {
+    EXECUTABLE_DIRECTORY = path.dirname(process.execPath);
+} else {
+    try {
+        EXECUTABLE_DIRECTORY = __dirname
+    } catch (e) {
+        EXECUTABLE_DIRECTORY = path.dirname(fileURLToPath(import.meta.url))
+    }
+}
+let LIBRARY_PATH = path.join(EXECUTABLE_DIRECTORY, "lib");
+
 export async function delay(seconds: number) {
     return new Promise<void>(resolve => {
         setTimeout(resolve, seconds * 1000);
@@ -21,7 +35,6 @@ export async function execute(command: string, args: string[], options: {
     }
     const childProcess = child_process.spawn(command, args, {
         cwd: options.cwd,
-
     });
     const stdout = childProcess.stdout;
     let stream: fs.WriteStream | undefined;
@@ -47,7 +60,7 @@ export async function execute(command: string, args: string[], options: {
 }
 
 export function getPathFromLibraryRoot(relPath: string) {
-    return path.join(__dirname, "lib", relPath);
+    return path.join(LIBRARY_PATH, relPath);
 }
 
 

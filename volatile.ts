@@ -37,9 +37,16 @@ export async function getIpConfig(params: {outDir: string}) {
         stdoutPath: path.join(params.outDir, "ipconfig.txt")
     });
 }
+
 export async function getPromiscuousAdapters(params: {outDir: string}) {
     await execute(getPathFromLibraryRoot("network/promiscdetect"), [], {
         stdoutPath: path.join(params.outDir, "promiscuous_adapters.txt")
+    });
+}
+
+export async function getNetStat(params: {outDir: string}) {
+    await execute("netstat", ["-a", "-f", "-o"], {
+        stdoutPath: path.join(params.outDir, "netstat.txt")
     });
 }
 

